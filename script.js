@@ -171,6 +171,7 @@ function update() {
         }
 
         if (correct == width) {
+            document.getElementById("answer").innerText = "Conratulations You Gussed the Correct Word";
             gameOver = true;
         }
     }
