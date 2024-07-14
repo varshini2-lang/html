@@ -44,6 +44,7 @@ window.onload = function() {
                 setTwo();
             }
         }
+        updateScore();
     }
 }
 
@@ -76,44 +77,40 @@ function updateTile(tile, num) {
     if (num > 0) {
         tile.innerText = num.toString();
         if (num <= 4096) {
-            tile.classList.add("x"+num.toString());
+            tile.classList.add("x" + num.toString());
         } else {
             tile.classList.add("x8192");
-        }                
+        }
     }
 }
 
 document.addEventListener('keyup', (e) => {
-    if (e.code == "ArrowLeft" ) {
+    if (e.code == "ArrowLeft") {
         slideLeft();
         setTwo();
-    }
-    else if (e.code == "ArrowRight") {
+    } else if (e.code == "ArrowRight") {
         slideRight();
         setTwo();
-    }
-    else if (e.code == "ArrowUp") {
+    } else if (e.code == "ArrowUp") {
         slideUp();
         setTwo();
-
-    }
-    else if (e.code == "ArrowDown") {
+    } else if (e.code == "ArrowDown") {
         slideDown();
         setTwo();
     }
-    document.getElementById("score").innerText = score;
+    updateScore();
 })
 
-function filterZero(row){
+function filterZero(row) {
     return row.filter(num => num != 0); //create new array of all nums != 0
 }
 
 function slide(row) {
     row = filterZero(row); // Remove zeros
-    for (let i = 0; i < row.length-1; i++){
-        if (row[i] == row[i+1]) {
+    for (let i = 0; i < row.length - 1; i++) {
+        if (row[i] == row[i + 1]) {
             row[i] *= 2;
-            row[i+1] = 0;
+            row[i + 1] = 0;
             score += row[i];
         }
     }
@@ -130,12 +127,13 @@ function slideLeft() {
         let row = board[r];
         row = slide(row);
         board[r] = row;
-        for (let c = 0; c < columns; c++){
+        for (let c = 0; c < columns; c++) {
             let tile = document.getElementById(r.toString() + "-" + c.toString());
             let num = board[r][c];
             updateTile(tile, num);
         }
     }
+    updateScore();
 }
 
 function slideRight() {
@@ -145,25 +143,27 @@ function slideRight() {
         row = slide(row);
         row.reverse(); // Reverse back
         board[r] = row;
-        for (let c = 0; c < columns; c++){
+        for (let c = 0; c < columns; c++) {
             let tile = document.getElementById(r.toString() + "-" + c.toString());
             let num = board[r][c];
             updateTile(tile, num);
         }
     }
+    updateScore();
 }
 
 function slideUp() {
     for (let c = 0; c < columns; c++) {
         let row = [board[0][c], board[1][c], board[2][c], board[3][c]];
         row = slide(row);
-        for (let r = 0; r < rows; r++){
+        for (let r = 0; r < rows; r++) {
             board[r][c] = row[r];
             let tile = document.getElementById(r.toString() + "-" + c.toString());
             let num = board[r][c];
             updateTile(tile, num);
         }
     }
+    updateScore();
 }
 
 function slideDown() {
@@ -172,13 +172,14 @@ function slideDown() {
         row.reverse(); // Reverse the row
         row = slide(row);
         row.reverse(); // Reverse back
-        for (let r = 0; r < rows; r++){
+        for (let r = 0; r < rows; r++) {
             board[r][c] = row[r];
             let tile = document.getElementById(r.toString() + "-" + c.toString());
             let num = board[r][c];
             updateTile(tile, num);
         }
     }
+    updateScore();
 }
 
 function setTwo() {
@@ -208,4 +209,8 @@ function hasEmptyTile() {
         }
     }
     return false;
+}
+
+function updateScore() {
+    document.getElementById("score").innerText = score;
 }
